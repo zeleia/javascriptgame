@@ -1,7 +1,9 @@
 window.addEventListener('load', init, false);
 
 function init() {
-    window.addEventListener('click',insertElement,false);
+    window.addEventListener('click', insertElement, false);
+    document.querySelector('#rotate').addEventListener('click', rotate, false);
+    document.querySelector('#mirror').addEventListener('click', mirror, false);
 
     if (window.localStorage.getItem("map") !== null) {
         recreateMap();
@@ -53,16 +55,16 @@ function drawTable() {
             if (isMountain(i, j)) {
                 cell.style.backgroundColor = 'brown';
             } else {
-                if(map[i][j] == 2){
+                if (map[i][j] == 2) {
                     cell.style.backgroundColor = 'blue';
                 } else {
-                    if(map[i][j] == 3){
+                    if (map[i][j] == 3) {
                         cell.style.backgroundColor = 'green';
                     } else {
-                        if(map[i][j] == 4){
+                        if (map[i][j] == 4) {
                             cell.style.backgroundColor = 'yellow';
                         } else {
-                            if(map[i][j] == 5){
+                            if (map[i][j] == 5) {
                                 cell.style.backgroundColor = 'red';
                             } else {
                                 cell.className = "clickable";
@@ -292,7 +294,7 @@ function recreateElements() {
     elements = new Array(elems.length);
     for (let i = 0; i < elems.length; i++) {
         const temp = elems[i].split(",");
-        elements[i] = {time: temp[0], type: temp[1], shape: new Array(3), rotation: temp[11], mirrored: temp[12]};
+        elements[i] = { time: temp[0], type: temp[1], shape: new Array(3), rotation: temp[11], mirrored: temp[12] };
         let shapeIndex = 2;
         for (let j = 0; j < 3; j++) {
             elements[i].shape[j] = new Array(temp[shapeIndex++], temp[shapeIndex++], temp[shapeIndex++]);
@@ -333,36 +335,90 @@ function drawElement(elem) {
 
 
 
-function insertElement(e){
-    if(e.target.className === 'clickable'){
+function insertElement(e) {
+    if (e.target.className === 'clickable' && check(e)) {
         const temp = e.target.id;
         let coord = temp.split(',');
         console.log(coord);
-        for(let i = 0; i < 3; i++){
-            for(let j = 0; j < 3; j++){
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
                 const row = Number(coord[0]) + i;
-                console.log(row);
                 const col = Number(coord[1]) + j;
-                console.log(col);
-                if(elements[0].type === "water" && elements[0].shape[i][j] != 0){
+                if (elements[0].type === "water" && elements[0].shape[i][j] != 0) {
                     map[row][col] = 2;
                 }
-                if(elements[0].type === "forest" && elements[0].shape[i][j] != 0){
+                if (elements[0].type === "forest" && elements[0].shape[i][j] != 0) {
                     map[row][col] = 3;
                 }
-                if(elements[0].type === "farm" && elements[0].shape[i][j] != 0){
+                if (elements[0].type === "farm" && elements[0].shape[i][j] != 0) {
                     map[row][col] = 4;
                 }
-                if(elements[0].type === "town" && elements[0].shape[i][j] != 0){
+                if (elements[0].type === "town" && elements[0].shape[i][j] != 0) {
                     map[row][col] = 5;
                 }
             }
         }
-        console.log(map);
         window.localStorage.setItem("map", map);
         drawTable();
         elements.shift();
         saveToLocal();
         drawElement(elements[0]);
     }
+}
+
+function check(e) {
+    const temp = e.target.id;
+    let coord = temp.split(',');
+    let n = map.length;
+    const matrix = elements[0].shape;
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            const row = Number(coord[0]) + i;
+            const col = Number(coord[1]) + j;
+            if((row >= n && matrix[i][j] != 0) || (col >= n && matrix[i][j] != 0) || (map[row][col] != 0 && matrix[i][j] != 0)){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+function rotate() {
+    const matrix = elements[0].shape;
+    let n = matrix.length;
+
+    let rotated = new Array(n);
+    for (let i = 0; i < n; i++) {
+        rotated[i] = new Array(n);
+    }
+
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            rotated[i][j] = matrix[n - 1 - j][i];
+        }
+    }
+
+    elements[0].shape = rotated;
+    saveToLocal();
+    drawElement(elements[0]);
+}
+
+function mirror() {
+    let matrix = elements[0].shape;
+    let n = matrix.length;
+
+    let mirrored = new Array(n);
+    for (let i = 0; i < n; i++) {
+        mirrored[i] = new Array(n);
+    }
+
+    for (let i = 0; i < n; i++) {
+        for (let j = 2; j >= 0; j--) {
+            mirrored[i][j] = matrix[i][n - j - 1];
+        }
+    }
+
+    elements[0].shape = mirrored;
+    saveToLocal();
+    drawElement(elements[0]);
 }
