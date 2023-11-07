@@ -27,6 +27,9 @@ function init() {
         timeLeft = 28;
         window.localStorage.setItem("time", timeLeft);
     }
+
+    currentSeason();
+    daysLeft();
 }
 
 //Mátrix létrehozása
@@ -374,6 +377,8 @@ function insertElement(e) {
             }
         }
         timeLeft -= elem.time;
+        currentSeason();
+        daysLeft();
         window.localStorage.setItem("time", timeLeft);
         window.localStorage.setItem("map", map);
         drawTable();
@@ -460,7 +465,7 @@ function check(e) {
                 }
             }
         }
-    } else { 
+    } else {
         if (Number(coord[0]) >= (n - 2)) {
             if ((n - Number(coord[0])) == 2) {
                 for (let i = 0; i < 3; i++) {
@@ -596,6 +601,50 @@ function mirror() {
 }
 
 let timeLeft;
+
+function currentSeason() {
+    const season = document.querySelector('#currentSeason');
+    switch (Math.floor(timeLeft / 7)) {
+        case 0:
+            season.innerHTML = "Jelenlegi évszak: Tél";
+            break;
+        case 1:
+            season.innerHTML = "Jelenlegi évszak: Ősz";
+            break;
+        case 2:
+            season.innerHTML = "Jelenlegi évszak: Nyár";
+            break;
+        default:
+            season.innerHTML = "Jelenlegi évszak: Tavasz";
+    }
+}
+
+function daysLeft() {
+    const daysLeftText = document.querySelector('#daysLeft');
+    const daysLeft = timeLeft % 7;
+    switch (daysLeft) {
+        case 6:
+            daysLeftText.innerHTML = "Évszakból hátralevő idő: 6/7";
+            break;
+        case 5:
+            daysLeftText.innerHTML = "Évszakból hátralevő idő: 5/7";
+            break;
+        case 4:
+            daysLeftText.innerHTML = "Évszakból hátralevő idő: 4/7";
+            break;
+        case 3:
+            daysLeftText.innerHTML = "Évszakból hátralevő idő: 3/7";
+            break;
+        case 2:
+            daysLeftText.innerHTML = "Évszakból hátralevő idő: 2/7";
+            break;
+        case 1:
+            daysLeftText.innerHTML = "Évszakból hátralevő idő: 1/7";
+            break;
+        default:
+            daysLeftText.innerHTML = "Évszakból hátralevő idő: 7/7";
+    }
+}
 
 function gameEnd() {
     if (window.localStorage.getItem("time") <= 0) {

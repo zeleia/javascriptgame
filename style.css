@@ -1,5 +1,73 @@
 td {
     width: 50px;
     height: 50px;
-    border: 1px black solid;
+    border: 1px white solid;
+}
+
+body {
+    background-image: url('./assets/theme.png');
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.field {
+    margin-top: 20px;
+    background-color: rgb(100% 100% 100% / .7);
+    backdrop-filter: blur(15px);
+    padding-top: 20px;
+    border-radius: 25px;
+    padding-bottom: 20px;
+}
+
+#spring {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 5px green solid;
+    border-radius: 25px;
+    min-height: 80px;
+    background-color: lightgreen;
+    color: white;
+}
+
+#summer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 5px gold solid;
+    border-radius: 25px;
+    min-height: 80px;
+    background-color: yellow;
+    color: white;
+}
+
+#autumn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 5px brown solid;
+    border-radius: 25px;
+    min-height: 80px;
+    background-color: burlywood;
+    color: white;
+}
+
+#winter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 5px blue solid;
+    border-radius: 25px;
+    min-height: 80px;
+    background-color: lightblue;
+    color: white;
+}
+
+#result {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#currentSeason {
+    margin-top: 30px;
 }
