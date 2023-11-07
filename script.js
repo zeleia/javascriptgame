@@ -330,20 +330,27 @@ function drawElement(elem) {
             if (elem.shape[i][j] != 0) {
                 switch (elem.type) {
                     case "farm":
-                        cell.style.backgroundColor = 'yellow';
+                        cell.style.backgroundImage = "url('./assets/plains_tile.png')";
+                        cell.style.backgroundSize = "50px 50px";
                         break;
                     case "water":
-                        cell.style.backgroundColor = 'blue';
+                        cell.style.backgroundImage = "url('./assets/water_tile.png')";
+                        cell.style.backgroundSize = "50px 50px";
                         break;
                     case "forest":
-                        cell.style.backgroundColor = 'green';
+                        cell.style.backgroundImage = "url('./assets/forest_tile.png')";
+                        cell.style.backgroundSize = "50px 50px";
                         break;
                     case "town":
-                        cell.style.backgroundColor = 'red';
+                        cell.style.backgroundImage = "url('./assets/village_tile.png')";
+                        cell.style.backgroundSize = "50px 50px";
                         break;
                     default:
                         console.log("Hibás típus!");
                 }
+            } else {
+                cell.style.backgroundImage = "url('./assets/base_tile.png')";
+                cell.style.backgroundSize = "50px 50px";
             }
             row.appendChild(cell);
         }
