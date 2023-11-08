@@ -9,7 +9,7 @@ body {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-.field {
+#field {
     margin-top: 20px;
     background-color: rgb(100% 100% 100% / .7);
     backdrop-filter: blur(15px);

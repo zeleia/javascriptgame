@@ -611,18 +611,23 @@ let timeLeft;
 
 function currentSeason() {
     const season = document.querySelector('#currentSeason');
+    const glass = document.querySelector('#field');
     switch (Math.floor(timeLeft / 7)) {
         case 0:
             season.innerHTML = "Jelenlegi évszak: Tél";
+            glass.style.backgroundColor = 'rgb(65% 105% 225% / .7)'
             break;
         case 1:
             season.innerHTML = "Jelenlegi évszak: Ősz";
+            glass.style.backgroundColor = 'rgb(123% 63% 0% / .7)'
             break;
         case 2:
             season.innerHTML = "Jelenlegi évszak: Nyár";
+            glass.style.backgroundColor = 'rgb(250% 215% 0% / .7)'
             break;
         default:
             season.innerHTML = "Jelenlegi évszak: Tavasz";
+            glass.style.backgroundColor = 'rgb(34% 139% 34% / .7)'
     }
 }
 
