@@ -816,6 +816,7 @@ function calculateSpringPoints() {
   let result = calculateMissionPoints([activeMissions[0], activeMissions[1]]);
   result += calculateMountainBordelLine();
   window.localStorage.setItem("springPoints", result);
+  document.querySelector('#spring').innerHTML = "Tavasz<br>" + window.localStorage.getItem('springPoints') + " pont";
 }
 
 function calculateSummerPoints() {
@@ -824,6 +825,7 @@ function calculateSummerPoints() {
   window.localStorage.setItem("summerPoints", result);
   missionBPoints = calculateMissionPoints([activeMissions[1]]);
   window.localStorage.setItem("bMissionPoints", missionBPoints);
+  document.querySelector('#summer').innerHTML = "Nyár<br>" + window.localStorage.getItem('summerPoints') + " pont";
 }
 
 function calculateAutumnPoints() {
@@ -832,12 +834,14 @@ function calculateAutumnPoints() {
   window.localStorage.setItem("autumnPoints", result);
   missionCPoints = calculateMissionPoints([activeMissions[2]]);
   window.localStorage.setItem("cMissionPoints", missionCPoints);
+  document.querySelector('#autumn').innerHTML = "Ősz<br>" + window.localStorage.getItem('autumnPoints') + " pont";
 }
 
 function calculateWinterPoints() {
   let result = calculateMissionPoints([activeMissions[3], activeMissions[0]]);
   result += calculateMountainBordelLine();
   window.localStorage.setItem("winterPoints", result);
+  document.querySelector('#winter').innerHTML = "Tél<br>" + window.localStorage.getItem('winterPoints') + " pont";
 }
 
 function calculateMissionPoints(m) {
@@ -1026,5 +1030,6 @@ function gameEnd() {
     const all = spring + summer + autumn + winter + mountain;
     document.querySelector('#result').innerHTML = `Összesen: ${all} pont`
     window.localStorage.clear();
+    document.querySelector('#field').style.backgroundColor = "rgb(100% 100% 100% / .7)";
   }
 }
