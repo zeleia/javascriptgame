@@ -1,6 +1,8 @@
 window.addEventListener("load", init, false);
 
 function init() {
+  document.querySelector('#results').innerHTML = "";
+
   window.addEventListener("click", insertElement, false);
   document.querySelector("#rotate").addEventListener("click", rotate, false);
   document.querySelector("#mirror").addEventListener("click", mirror, false);
@@ -316,6 +318,17 @@ let elements = [
     rotation: 0,
     mirrored: false,
   },
+  {
+    time: 3,
+    type: "farm",
+    shape: [
+      [0, 1, 0],
+      [1, 1, 1],
+      [1, 0, 1],
+    ],
+    rotation: 0,
+    mirrored: false,
+  },
 ];
 
 function shuffle() {
@@ -376,6 +389,7 @@ function recreateElements() {
 
 function drawElement(elem) {
   const table = document.querySelector("#elems");
+  document.querySelector('#time').innerHTML = 'Időegység:' + elem.time;
   table.innerHTML = null;
   for (let i = 0; i < elem.shape.length; i++) {
     const row = document.createElement("tr");
@@ -666,6 +680,10 @@ function currentSeason() {
       if (window.localStorage.getItem("autumnPoints") === null) {
         calculateAutumnPoints();
       }
+      document.querySelector('#missionD').classList.add("outline");
+      document.querySelector('#missionA').classList.add("outline");
+      document.querySelector('#missionC').classList.remove("outline");
+      document.querySelector('#missionB').classList.remove("outline");
       break;
     case 1:
       season.innerHTML = "Jelenlegi évszak: Ősz";
@@ -673,6 +691,10 @@ function currentSeason() {
       if (window.localStorage.getItem("summerPoints") === null) {
         calculateSummerPoints();
       }
+      document.querySelector('#missionD').classList.add("outline");
+      document.querySelector('#missionC').classList.add("outline");
+      document.querySelector('#missionA').classList.remove("outline");
+      document.querySelector('#missionB').classList.remove("outline");
       break;
     case 2:
       season.innerHTML = "Jelenlegi évszak: Nyár";
@@ -680,10 +702,18 @@ function currentSeason() {
       if (window.localStorage.getItem("springPoints") === null) {
         calculateSpringPoints();
       }
+      document.querySelector('#missionC').classList.add("outline");
+      document.querySelector('#missionB').classList.add("outline");
+      document.querySelector('#missionA').classList.remove("outline");
+      document.querySelector('#missionD').classList.remove("outline");
       break;
     default:
       season.innerHTML = "Jelenlegi évszak: Tavasz ";
       glass.style.backgroundColor = "rgb(34% 139% 34% / .7)";
+      document.querySelector('#missionA').classList.add("outline");
+      document.querySelector('#missionB').classList.add("outline");
+      document.querySelector('#missionC').classList.remove("outline");
+      document.querySelector('#missionD').classList.remove("outline");
   }
 }
 
@@ -783,22 +813,30 @@ const missions = {
 const activeMissions = missions.basic;
 
 function calculateSpringPoints() {
-  const result = calculateMissionPoints([activeMissions[0], activeMissions[1]]);
+  let result = calculateMissionPoints([activeMissions[0], activeMissions[1]]);
+  result += calculateMountainBordelLine();
   window.localStorage.setItem("springPoints", result);
 }
 
 function calculateSummerPoints() {
-  const result = calculateMissionPoints([activeMissions[1], activeMissions[2]]);
+  let result = calculateMissionPoints([activeMissions[1], activeMissions[2]]);
+  result += calculateMountainBordelLine();
   window.localStorage.setItem("summerPoints", result);
+  missionBPoints = calculateMissionPoints([activeMissions[1]]);
+  window.localStorage.setItem("bMissionPoints", missionBPoints);
 }
 
 function calculateAutumnPoints() {
-  const result = calculateMissionPoints([activeMissions[2], activeMissions[3]]);
+  let result = calculateMissionPoints([activeMissions[2], activeMissions[3]]);
+  result += calculateMountainBordelLine();
   window.localStorage.setItem("autumnPoints", result);
+  missionCPoints = calculateMissionPoints([activeMissions[2]]);
+  window.localStorage.setItem("cMissionPoints", missionCPoints);
 }
 
 function calculateWinterPoints() {
-  const result = calculateMissionPoints([activeMissions[3], activeMissions[0]]);
+  let result = calculateMissionPoints([activeMissions[3], activeMissions[0]]);
+  result += calculateMountainBordelLine();
   window.localStorage.setItem("winterPoints", result);
 }
 
@@ -933,10 +971,60 @@ function calculateBorderline() {
   return result;
 }
 
+function calculateMountainBordelLine(){
+  let result = 0;
+  for(let i = 0; i < map.length; i++){
+    for(let j = 0; j < map.length; j++){
+      if (map[i][j] == 1) {
+        if (i - 1 < 0 || map[i - 1][j] == 0) {
+          continue;
+        }
+        if (i + 1 >= map.length || map[i + 1][j] == 0) {
+          continue;
+        }
+        if (j - 1 < 0 || map[i][j - 1] == 0) {
+          continue;
+        }
+        if (j + 1 >= map.length || map[i][j + 1] == 0) {
+          continue;
+        }
+        result += 1;
+        console.log("mountain!")
+      }
+    }
+  }
+  return result;
+}
+
+let missionAPoints;
+let missionBPoints;
+let missionCPoints;
+let missionDPoints;
+
 function gameEnd() {
   if (window.localStorage.getItem("time") <= 0) {
-    console.log("Vége a játéknak!");
+    missionDPoints = calculateMissionPoints([activeMissions[3]]);
+    window.localStorage.setItem("dMissionPoints", missionDPoints);
+    missionAPoints = calculateMissionPoints([activeMissions[0]]);
+    window.localStorage.setItem("aMissionPoints", missionAPoints);
+    const result = document.querySelector('#results');
+    result.innerHTML =
+      `<h1>Vége a játéknak!</h1>
+     ${activeMissions[0].title}: ${missionAPoints} pont<br>
+     ${activeMissions[1].title}: ${missionBPoints} pont<br>
+     ${activeMissions[2].title}: ${missionCPoints} pont<br>
+     ${activeMissions[3].title}: ${missionDPoints} pont<br>`;
+    window.removeEventListener('click', insertElement, false);
+    document.querySelector("#rotate").removeEventListener('click', rotate, false);
+    document.querySelector("#mirror").removeEventListener('click', mirror, false);
+    result.innerHTML += '<button type="button" onclick="window.location.reload()">Új játék!</button>';
+    const spring = Number(window.localStorage.getItem('springPoints'));
+    const summer = Number(window.localStorage.getItem('summerPoints'));
+    const autumn = Number(window.localStorage.getItem('autumnPoints'));
+    const winter = Number(window.localStorage.getItem('winterPoints'));
+    const mountain = calculateMountainBordelLine();
+    const all = spring + summer + autumn + winter + mountain;
+    document.querySelector('#result').innerHTML = `Összesen: ${all} pont`
     window.localStorage.clear();
-    init();
   }
 }
