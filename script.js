@@ -1025,6 +1025,7 @@ function gameEnd() {
     const spring = Number(window.localStorage.getItem('springPoints'));
     const summer = Number(window.localStorage.getItem('summerPoints'));
     const autumn = Number(window.localStorage.getItem('autumnPoints'));
+    calculateWinterPoints();
     const winter = Number(window.localStorage.getItem('winterPoints'));
     const mountain = calculateMountainBordelLine();
     const all = spring + summer + autumn + winter + mountain;
